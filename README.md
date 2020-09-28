@@ -1,8 +1,8 @@
 wine_predictor
 
 **About**
-Full Stack, End-to-End Machine Learning project that predcits wine success(based on sommelier's rating). 
-from certain attributes, like alchol content, acidity, etc. Based off of https://elitedatascience.com/python-machine-learning-tutorial-scikit-learn.
+Full Stack, End-to-End Machine Learning project that predicts wine success(based on sommelier's rating), 
+from certain attributes, like alcohol content, acidity, etc. Based off of https://elitedatascience.com/python-machine-learning-tutorial-scikit-learn.
 This program encorpaorates data cleaning and preprocessing, hyperparameter tuning, and predcition.
 
 The model is a random forrest regressor, and uses Random Grid Search to find a suitable list of hyperparamters. Then normal 
