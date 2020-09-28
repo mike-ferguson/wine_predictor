@@ -1,3 +1,15 @@
+# Author: Mike Ferguson
+# Version: 1.0
+# Code Inspired from https://elitedatascience.com/python-machine-learning-tutorial-scikit-learn
+# and also from https://towardsdatascience.com/hyperparameter-tuning-the-random-forest-in-python-using-scikit-learn-28d2aa77dd74
+
+# this program is a full end-to-end machine learning projects, and encorporates
+# data preprocessing, data cleaning, training, and fine tuning. It is a random forrest
+# regressor, and is tuned with both Random Grid Search and Grid Search/
+# Currently achives a MSE of 0.383 and a test accuracy of 92.86%.
+
+
+# import all libraries
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -39,6 +51,7 @@ pipeline = make_pipeline(preprocessing.StandardScaler(), my_regressor)
 
 # clf = GridSearchCV(pipeline, hyperparameters, cv=3, verbose=1, n_jobs=-1)
 
+# create hyperparameter dictionaries for Grid Search
 n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 10)]
 max_features = ['auto', 'sqrt']
 max_depth = [int(x) for x in np.linspace(10, 110, num = 11)]
@@ -55,6 +68,7 @@ random_grid = {'n_estimators': n_estimators,
                'min_samples_leaf': min_samples_leaf,
                'bootstrap': bootstrap}
 
+# call the randomzed grid search
 clf = RandomizedSearchCV(estimator = my_regressor, param_distributions = random_grid,
                    n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = -1)
 
@@ -73,17 +87,17 @@ def evaluate(model, test_features, test_labels):
     print('Model Performance')
     print('Average Error: {:0.4f} degrees.'.format(np.mean(errors)))
     print('Accuracy = {:0.2f}%.'.format(accuracy))
-
     return accuracy
 
+# create base model to compare to
 base_model = RandomForestRegressor(n_estimators = 10, random_state = 42)
 base_model.fit(X_train, y_train)
 base_accuracy = evaluate(base_model, X_test, y_test)
 
+# re-call the grid search to get best model
 best_random = clf.best_estimator_
 random_accuracy = evaluate(best_random, X_test, y_test)
 print('Improvement of {:0.2f}%.'.format( 100 * (random_accuracy - base_accuracy) / base_accuracy))
-
 
 # Create the parameter grid based on the results of random search
 param_grid = {
@@ -100,9 +114,9 @@ rf = RandomForestRegressor()
 grid_search = GridSearchCV(estimator = rf, param_grid = param_grid,
                           cv = 3, n_jobs = -1, verbose = 1)
 
+# run the full scale grid searches
 grid_search.fit(X_train, y_train)
 print(grid_search.best_params_)
-
 best_grid = grid_search.best_estimator_
 grid_accuracy = evaluate(best_grid, X_test, y_test)
 print('Improvement of {:0.2f}%.'.format(100 * (grid_accuracy - base_accuracy) / base_accuracy))
